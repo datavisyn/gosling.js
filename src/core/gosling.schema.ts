@@ -834,6 +834,13 @@ export interface JsonData {
      */
     sampleLength?: number;
 
+    /**
+     * Specify the way of sampling from the data if the number of rows to show exceeds `sampleLength`.
+     *
+     * __Default:__ `random`
+     */
+    sampleType?: 'first' | 'random';
+
     /** experimental */
     genomicFieldsToConvert?: {
         chromosomeField: string;

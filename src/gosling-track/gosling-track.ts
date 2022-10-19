@@ -855,9 +855,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         /** Get resolved tracks that should be rendered by a `gosling-track` track */
         getResolvedTracks() {
-            const copy = structuredClone(this.options.spec);
             // Brushes are drawn by another plugin track.
-            return resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+            return resolveSuperposedTracks(this.options.spec).filter(t => t.mark !== 'brush');
         }
 
         /**
@@ -976,6 +975,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         const numOrRows = tabularDataTransformed.length;
                         PubSub.publish('data-preview', {
                             id: context.viewUid,
+                            // TODO: Do we need the stringified version? Stringify of large JSON data is very slow.
                             dataConfig: JSON.stringify({ data: resolvedSpec.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
@@ -1147,14 +1147,14 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 ) {
                     publish(eventType, {
                         id: context.viewUid,
-                        spec: structuredClone(this.options.spec),
+                        spec: this.options.spec,
                         shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
                     });
                 }
             } else {
                 publish(eventType, {
                     id: context.viewUid,
-                    spec: structuredClone(this.options.spec),
+                    spec: this.options.spec,
                     shape: { x, y, width, height }
                 });
             }

@@ -61,7 +61,6 @@ export class GoslingTrackModel {
     private specComplete: SingleTrack; // processed spec, being used in visualizations
 
     /* data */
-    private dataOriginal: { [k: string]: number | string }[];
     private dataAggregated: { [k: string]: number | string }[];
 
     /* channel scales */
@@ -77,11 +76,10 @@ export class GoslingTrackModel {
 
         this.theme = theme ?? getTheme();
 
-        this.dataOriginal = JSON.parse(JSON.stringify(data));
-        this.dataAggregated = JSON.parse(JSON.stringify(data));
+        this.dataAggregated = data;
 
-        this.specOriginal = JSON.parse(JSON.stringify(spec));
-        this.specComplete = JSON.parse(JSON.stringify(spec));
+        this.specOriginal = spec;
+        this.specComplete = spec;
 
         this.channelScales = {};
 
