@@ -6,6 +6,7 @@ export { GoslingSchema, ThemeSchema };
 export type { GoslingSpec, TemplateTrackDef } from './core/gosling.schema';
 export type { HiGlassSpec } from './core/higlass.schema';
 export { GoslingTemplates } from './core/utils/template';
+export { getRelativeGenomicPosition } from './core/utils/assembly';
 export type { Theme } from './core/utils/theme';
 
 export { init } from './core/init';
