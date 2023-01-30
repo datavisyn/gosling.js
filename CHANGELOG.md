@@ -1,3 +1,37 @@
+## [0.9.28](https://github.com/gosling-lang/gosling.js/compare/v0.9.27...v0.9.28) (2023-01-05)
+
+
+### Features
+
+* infer `chr` prefix in bam file for ease of use ([#837](https://github.com/gosling-lang/gosling.js/issues/837)) ([e3461cf](https://github.com/gosling-lang/gosling.js/commit/e3461cf3c588e9344e59a2e1b60f43a1eaea8c28))
+
+
+
+## [0.9.27](https://github.com/gosling-lang/gosling.js/compare/v0.9.26...v0.9.27) (2022-12-08)
+
+
+### Bug Fixes
+
+* correctly display legends when multiple tracks are overlaid ([#834](https://github.com/gosling-lang/gosling.js/issues/834)) ([4ea1033](https://github.com/gosling-lang/gosling.js/commit/4ea103305333780886b97f416fa36cc09cbcb7ec))
+
+
+### Features
+
+* add support for drawing vertical lines on withinLink ([#833](https://github.com/gosling-lang/gosling.js/issues/833)) ([c4b4e9d](https://github.com/gosling-lang/gosling.js/commit/c4b4e9d1e9d15d2d255c688c8ce8ba7822f32b10))
+
+
+
+## [0.9.26](https://github.com/gosling-lang/gosling.js/compare/v0.9.25...v0.9.26) (2022-11-26)
+
+
+### Bug Fixes
+
+* do not try to infer tile unit size when info missing ([#821](https://github.com/gosling-lang/gosling.js/issues/821)) ([7edb6c0](https://github.com/gosling-lang/gosling.js/commit/7edb6c0bc31e2245de091f342e8ffb4b07dd4427))
+* fix errors when displaying vcf files ([#826](https://github.com/gosling-lang/gosling.js/issues/826)) ([95791a6](https://github.com/gosling-lang/gosling.js/commit/95791a66fb5cfae4b14bb12b5f51c418dad58a11))
+* improve within link performance by reducing the number of event points ([#828](https://github.com/gosling-lang/gosling.js/issues/828)) ([4562bc9](https://github.com/gosling-lang/gosling.js/commit/4562bc9e6acdcd0d29a8060882306b6c9f2a0271))
+
+
+
 ## [0.9.25](https://github.com/gosling-lang/gosling.js/compare/v0.9.24...v0.9.25) (2022-10-14)
 
 
