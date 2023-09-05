@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
+import dts from 'vite-plugin-dts';
 import * as esbuild from 'esbuild';
 import path from 'path';
 import pkg from './package.json';
@@ -87,7 +88,7 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker]
+    plugins: [manualInlineWorker, dts({ rollupTypes: true })]
 });
 
 const dev = defineConfig({

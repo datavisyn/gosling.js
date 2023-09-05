@@ -15,7 +15,11 @@
         "dist"
     ],
     "exports": {
-        ".": "./dist/gosling.es.js",
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/gosling.es.js",
+          "default": "./dist/gosling.es.js"
+        },
         "./embed": "./dist/embed/index.js"
     },
     "scripts": {
@@ -85,7 +89,8 @@
         "react-grid-layout": "^1.2.5",
         "stream-browserify": "^3.0.0",
         "threads": "^1.6.4",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "vite-plugin-dts": "^3.5.3"
     },
     "devDependencies": {
         "@testing-library/react": "^10.4.8",
