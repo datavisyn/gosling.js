@@ -2,7 +2,7 @@ import { bisector } from 'd3-array';
 import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
-import type { Assembly, ChromSizes, Datum } from '@gosling.schema';
+import type { Assembly, ChromSizes, Datum } from '@gosling-lang/gosling-schema';
 
 export type CommonDataConfig = {
     assembly: Assembly;
@@ -39,8 +39,8 @@ export function filterUsingGenoPos(
             return true;
         } else if (definedXFields.length === 1) {
             // filter based on one genomic position
-            const value = d[definedXFields[0]];
-            return minX < value && value <= maxX;
+            const value = +d[definedXFields[0]];
+            return typeof value === 'number' && minX < value && value <= maxX;
         } else {
             // filter based on two genomic positions, i.e., check overlaps
             const values = definedXFields.map(f => +d[f]).filter(v => !isNaN(v));

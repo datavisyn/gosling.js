@@ -1,10 +1,10 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Channel, Datum } from '../gosling.schema';
 import { min as d3min, max as d3max, group } from 'd3-array';
-import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
+import type { Channel, Datum } from '@gosling-lang/gosling-schema';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { IsStackedMark, getValueUsingChannel } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import type { Tile } from '../../gosling-track/gosling-track';
 
 /**
  * Draw area marks

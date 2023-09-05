@@ -1,11 +1,12 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import type { DisplayedLegend } from '@gosling-lang/gosling-track';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
-import { scaleLinear, ScaleLinear } from 'd3-scale';
+import { scaleLinear, type ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
-import type { DisplayedLegend } from 'src/gosling-track/gosling-track';
+import type { SubjectPosition, D3DragEvent } from 'd3-drag';
 
 // Just the libraries necesssary fro this module
 type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
@@ -84,7 +85,8 @@ export function drawColorLegendQuantitative(
 
     /* Legend Components */
     const colorScale = model.getChannelScale(channelKey);
-    const colorDomain = model.getChannelDomainArray(channelKey);
+    // TODO: Use overloads to remove type-casting (via `as`)
+    const colorDomain = model.getChannelDomainArray(channelKey) as [number, number] | undefined;
 
     if (!colorScale || !colorDomain) {
         // We do not have enough information for creating a color legend
@@ -208,12 +210,12 @@ export function drawColorLegendQuantitative(
         .call(
             HGC.libraries.d3Drag
                 .drag<Element, Datum>()
-                .on('start', () => {
-                    trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                .on('start', (event: D3DragEvent<SVGElement, Datum, SubjectPosition>) => {
+                    trackInfo.startEvent = event.sourceEvent;
                 })
-                .on('drag', d => {
+                .on('drag', (event: D3DragEvent<SVGElement, Datum, SubjectPosition>, d: Datum) => {
                     if (channel && channel.scaleOffset) {
-                        const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        const endEvent = event.sourceEvent;
                         const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
                         const newScaleOffset = [channel.scaleOffset[0], channel.scaleOffset[1]];
                         if (d.id === 0) {
@@ -226,7 +228,7 @@ export function drawColorLegendQuantitative(
                         trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset, channelKey);
                         trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset, channelKey);
                         trackInfo.draw();
-                        trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        trackInfo.startEvent = event.sourceEvent;
                     }
                 })
         );
@@ -275,7 +277,6 @@ export function drawColorLegendQuantitative(
         graphics.lineTo(tickEnd, y);
 
         // labels
-        // @ts-expect-error value should be text but is a number?
         const textGraphic = new HGC.libraries.PIXI.Text(value, labelTextStyle);
         textGraphic.anchor.x = 1;
         textGraphic.anchor.y = 0.5;

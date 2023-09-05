@@ -1,7 +1,7 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Assembly, Domain } from '../gosling.schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import type { Assembly, Domain } from '@gosling-lang/gosling-schema';
 import { SUPPORTED_CHANNELS } from '../mark';
-import { IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsChannelDeep } from '../gosling.schema.guards';
+import { IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsChannelDeep } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from './assembly';
 
 /**
@@ -52,13 +52,15 @@ export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?:
                 if (!globalDomain[channelKey]) {
                     globalDomain[channelKey] = numericDomain;
                 } else {
-                    if (globalDomain[channelKey][0] > numericDomain[0]) {
+                    const channelGlobalDomain = globalDomain[channelKey] as number[];
+
+                    if (channelGlobalDomain[0] > numericDomain[0]) {
                         // min
-                        globalDomain[channelKey][0] = numericDomain[0];
+                        channelGlobalDomain[0] = numericDomain[0];
                     }
-                    if (globalDomain[channelKey][1] < numericDomain[1]) {
+                    if (channelGlobalDomain[1] < numericDomain[1]) {
                         // max
-                        globalDomain[channelKey][1] = numericDomain[1];
+                        channelGlobalDomain[1] = numericDomain[1];
                     }
                 }
             } else if (type === 'nominal') {

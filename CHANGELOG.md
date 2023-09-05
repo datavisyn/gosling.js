@@ -1,3 +1,104 @@
+## [0.10.1](https://github.com/gosling-lang/gosling.js/compare/v0.10.0...v0.10.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* **data-fetcher:** gmod/gff stream issue ([#957](https://github.com/gosling-lang/gosling.js/issues/957)) ([c698785](https://github.com/gosling-lang/gosling.js/commit/c6987855c73e82a44a0ea10d7f822f121d480943))
+
+
+
+# [0.10.0](https://github.com/gosling-lang/gosling.js/compare/v0.9.33...v0.10.0) (2023-08-01)
+
+
+### Bug Fixes
+
+* **core:** do not override ID in tracks from views ([#954](https://github.com/gosling-lang/gosling.js/issues/954)) ([6654e0d](https://github.com/gosling-lang/gosling.js/commit/6654e0d315a40978ce26d97fdcf38168472a088b))
+* **data-fetcher:** correctly calculate the distance to previous mutation in VCF (`DISTPREV`) ([#949](https://github.com/gosling-lang/gosling.js/issues/949)) ([ef5f58f](https://github.com/gosling-lang/gosling.js/commit/ef5f58f43ee33ca2de068a547f21ed1767426437))
+* **track:** remove private properties from draw() ([#952](https://github.com/gosling-lang/gosling.js/issues/952)) ([529e9a3](https://github.com/gosling-lang/gosling.js/commit/529e9a38484fe81b624292a582870ae0cc144d28))
+
+
+### Features
+
+* **api:** consistent track/view IDs for JS API ([#944](https://github.com/gosling-lang/gosling.js/issues/944)) ([1c2b766](https://github.com/gosling-lang/gosling.js/commit/1c2b7669660856cae98f88ba38d9326b788c75e1))
+* **api:** onNewTrack, onNewView ([#943](https://github.com/gosling-lang/gosling.js/issues/943)) ([a98ee69](https://github.com/gosling-lang/gosling.js/commit/a98ee69367273943becbeae8696b1511b35f04e4))
+* **api:** subscription for genomic axis changes ([#935](https://github.com/gosling-lang/gosling.js/issues/935)) ([a2c36f5](https://github.com/gosling-lang/gosling.js/commit/a2c36f500f0d8e1181c9c72a970eb385af4fe3b5))
+* **core, api, editor:** support using  view IDs ([#939](https://github.com/gosling-lang/gosling.js/issues/939)) ([cd8d300](https://github.com/gosling-lang/gosling.js/commit/cd8d3000f7e1e86422ec89f765585f6056d64a9f))
+* **data-fetcher:** GFF3 with tabix ([#923](https://github.com/gosling-lang/gosling.js/issues/923)) ([526882f](https://github.com/gosling-lang/gosling.js/commit/526882fb82463ad4262568d9569840431c709fc9))
+* **track:** dummy-track ([#946](https://github.com/gosling-lang/gosling.js/issues/946)) ([ee02d38](https://github.com/gosling-lang/gosling.js/commit/ee02d38312ae7431ccd460a6d5e1904013488427))
+
+
+
+## [0.9.33](https://github.com/gosling-lang/gosling.js/compare/v0.9.32...v0.9.33) (2023-07-11)
+
+
+### Bug Fixes
+
+* **data-fetcher:** Bump tabix-js version to fix errors when loading BED files ([#938](https://github.com/gosling-lang/gosling.js/issues/938)) ([d901232](https://github.com/gosling-lang/gosling.js/commit/d9012326f4eadbf0c50f3c70424951c4735dcb69))
+* **data-fetcher:** support genomicFieldsToConvert ([#932](https://github.com/gosling-lang/gosling.js/issues/932)) ([c94ecae](https://github.com/gosling-lang/gosling.js/commit/c94ecaea5ac010e17603816c6bf01c2d2b2a086c))
+
+
+
+## [0.9.32](https://github.com/gosling-lang/gosling.js/compare/v0.9.31...v0.9.32) (2023-07-05)
+
+
+### Bug Fixes
+
+* fix duplicated data and odd tile load timing in the bam data fetcher ([#927](https://github.com/gosling-lang/gosling.js/issues/927)) ([4e52907](https://github.com/gosling-lang/gosling.js/commit/4e52907b8ed79cc08d8c9ce1b823b72f026a4004))
+
+
+
+## [0.9.31](https://github.com/gosling-lang/gosling.js/compare/v0.9.30...v0.9.31) (2023-05-31)
+
+
+### Bug Fixes
+
+* revert breaking React 18 changes ([#913](https://github.com/gosling-lang/gosling.js/issues/913)) ([52bf2f2](https://github.com/gosling-lang/gosling.js/commit/52bf2f27bece7a8ecc038533c8a051c62fb9ba7b))
+
+
+### Features
+
+* islandviewer improvements ([#906](https://github.com/gosling-lang/gosling.js/issues/906)) ([86f50de](https://github.com/gosling-lang/gosling.js/commit/86f50deb3948cc103cde354e49c51d456e7987d1))
+* upgrade higlass to v1.12.4 ([#902](https://github.com/gosling-lang/gosling.js/issues/902)) ([758f730](https://github.com/gosling-lang/gosling.js/commit/758f730cc9407c364e057bfe86971367b89608da)), closes [#903](https://github.com/gosling-lang/gosling.js/issues/903)
+
+
+
+## [0.9.30](https://github.com/gosling-lang/gosling.js/compare/v0.9.29...v0.9.30) (2023-05-11)
+
+
+### Bug Fixes
+
+* fix `inRange` filter ([#896](https://github.com/gosling-lang/gosling.js/issues/896)) ([13a70a2](https://github.com/gosling-lang/gosling.js/commit/13a70a2eb367cbbce95ed4c6e617d5e1316439f9))
+* pileup calculation works when start and end fields are the same ([#891](https://github.com/gosling-lang/gosling.js/issues/891)) ([7754a15](https://github.com/gosling-lang/gosling.js/commit/7754a150f602444b1c74cf928c93df9fa6a07251))
+* tile values are correctly filtered based on genomics windows ([#892](https://github.com/gosling-lang/gosling.js/issues/892)) ([cef7953](https://github.com/gosling-lang/gosling.js/commit/cef7953e14c78be7e6638b7be10a3c1900fb5676))
+
+
+### Features
+
+* add BED file datafetcher ([#877](https://github.com/gosling-lang/gosling.js/issues/877)) ([a087340](https://github.com/gosling-lang/gosling.js/commit/a087340e996dc88d0b18094e6ab16bac36521731))
+* add islandviewer example ([#887](https://github.com/gosling-lang/gosling.js/issues/887)) ([897b0ef](https://github.com/gosling-lang/gosling.js/commit/897b0eff6ff7758741f4b42c29a1c6468addf25f))
+* support React 18 ([#898](https://github.com/gosling-lang/gosling.js/issues/898)) ([dc13381](https://github.com/gosling-lang/gosling.js/commit/dc1338110861b9ac50daab6f2e64db2fe75423ee))
+
+
+
+## [0.9.29](https://github.com/gosling-lang/gosling.js/compare/v0.9.28...v0.9.29) (2023-04-26)
+
+
+### Bug Fixes
+
+* alias lodash to lodash-es for smaller bundle ([#879](https://github.com/gosling-lang/gosling.js/issues/879)) ([9f1d108](https://github.com/gosling-lang/gosling.js/commit/9f1d10863bcc54e2a58d3cdf6a65c4311dc4039b))
+* **editor:** reduce asset size  ([#859](https://github.com/gosling-lang/gosling.js/issues/859)) ([404bafa](https://github.com/gosling-lang/gosling.js/commit/404bafab5ad31a6b6f6adf27db3323b275b13268))
+* flip the y-axis labels when the track is vertical ([#862](https://github.com/gosling-lang/gosling.js/issues/862)) ([6bd6df2](https://github.com/gosling-lang/gosling.js/commit/6bd6df2794bdfe91ce661037e9b3552f8493b10a))
+
+
+### Features
+
+* add jsx-a11y eslint plugin ([#842](https://github.com/gosling-lang/gosling.js/issues/842)) ([5f12b66](https://github.com/gosling-lang/gosling.js/commit/5f12b66c16e90dd95424aff2cad822cc0f9f9746))
+* **editor:** add link to gosling-lang.org to editor header ([#855](https://github.com/gosling-lang/gosling.js/issues/855)) ([6964671](https://github.com/gosling-lang/gosling.js/commit/696467199b19e933af5cc55d53b0ec4762d81b06))
+* support optional INFO fields of VCF files ([#864](https://github.com/gosling-lang/gosling.js/issues/864)) ([ebb5bea](https://github.com/gosling-lang/gosling.js/commit/ebb5beaca2f27a13d80872fce0ec5846b39dc588))
+* upgrade to HiGlass 1.12.2 ([#866](https://github.com/gosling-lang/gosling.js/issues/866)) ([0bc5691](https://github.com/gosling-lang/gosling.js/commit/0bc569122c53e5f12a0edde647b874b03e8e3b01))
+
+
+
 ## [0.9.28](https://github.com/gosling-lang/gosling.js/compare/v0.9.27...v0.9.28) (2023-01-05)
 
 

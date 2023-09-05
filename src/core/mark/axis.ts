@@ -1,11 +1,12 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import { scaleLinear } from 'd3-scale';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
-import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { isNumberArray, isStringArray } from '../utils/array';
 import { getTextStyle } from '../utils/text-style';
-import type { Tile } from '../../gosling-track/gosling-track';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;
@@ -35,12 +36,21 @@ export function drawLinearYAxis(
         return;
     }
 
+    if (!isNumberArray(yDomain)) {
+        // We can only draw axis for number domains
+        return;
+    }
+
     /* track size */
     const [tw, th] = trackInfo.dimensions;
     const [tx, ty] = trackInfo.position;
 
     /* row separation */
-    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = model.getChannelDomainArray('row') ?? ['___SINGLE_ROW___'];
+    if (!isStringArray(rowCategories)) {
+        // We can only draw axis for string categories
+        return;
+    }
     const rowHeight = th / rowCategories.length;
 
     if (rowHeight <= 20) {
@@ -120,13 +130,17 @@ export function drawLinearYAxis(
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            // @ts-expect-error t should be a string but is a number, should we cast??
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
             textGraphic.position.x = tickEnd;
             textGraphic.position.y = dy + rowHeight - y;
 
+            // Flip labels when orientation is vertical
+            if (spec.orientation === 'vertical') {
+                textGraphic.anchor.x = isLeft ? 1 : 0;
+                textGraphic.scale.x *= -1;
+            }
             graphics.addChild(textGraphic);
         });
     });
@@ -154,6 +168,11 @@ export function drawCircularYAxis(
 
     if (!model.isShowYAxis() || !yDomain || !yRange) {
         // We do not need to draw a y-axis
+        return;
+    }
+
+    if (!isNumberArray(yDomain)) {
+        // We can only draw axis for number domains
         return;
     }
 
@@ -300,7 +319,6 @@ export function drawCircularYAxis(
                 fontFamily: theme.axis.labelFontFamily,
                 fontWeight: theme.axis.labelFontWeight
             });
-            // @ts-expect-error t should be a string, not a number
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;

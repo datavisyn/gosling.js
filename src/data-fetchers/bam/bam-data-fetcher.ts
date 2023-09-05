@@ -5,7 +5,7 @@
 import { spawn } from 'threads';
 import Worker from './bam-worker.ts?worker&inline';
 
-import type { BamData, Assembly } from '@gosling.schema';
+import type { BamData, Assembly } from '@gosling-lang/gosling-schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, Junction, SegmentWithMate } from './bam-worker';
 import { computeChromSizes } from '../../core/utils/assembly';
@@ -26,7 +26,7 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
 
-    MAX_TILE_WIDTH = 2e4;
+    MAX_TILE_WIDTH = 2e4 as const;
 
     private worker: Promise<ModuleThread<WorkerApi>>;
 
@@ -79,7 +79,6 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
     }
 
     async sendFetch(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
-        // this.track.updateLoadingText();
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 

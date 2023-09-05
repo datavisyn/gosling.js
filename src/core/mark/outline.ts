@@ -1,5 +1,5 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 
@@ -12,12 +12,7 @@ export const TITLE_STYLE = {
     lineJoin: 'round'
 };
 
-export function drawChartOutlines(
-    HGC: import('@higlass/types').HGC,
-    trackInfo: any,
-    tm: GoslingTrackModel,
-    theme: Required<CompleteThemeDeep>
-) {
+export function drawChartOutlines(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const g = trackInfo.pBorder; // use pBorder not to affected by zoomming
 
     // size and position

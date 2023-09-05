@@ -1,9 +1,9 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Channel } from '../gosling.schema';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { Channel } from '@gosling-lang/gosling-schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { group } from 'd3-array';
-import { getValueUsingChannel, IsStackedMark } from '../gosling.schema.guards';
+import { getValueUsingChannel, IsStackedMark } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar } from '../utils/polar';
-import type { Tile } from '../../gosling-track/gosling-track';
 
 // Merge with the one in the `utils/text-style.ts`
 export const TEXT_STYLE_GLOBAL = {

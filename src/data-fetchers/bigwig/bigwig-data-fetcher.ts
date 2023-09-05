@@ -3,9 +3,9 @@
  * https://github.com/higlass/higlass-bigwig-datafetcher/blob/main/src/BigwigDataFetcher.js
  */
 import { BigWig } from '@gmod/bbi';
-import type { Assembly, BigWigData } from '@gosling.schema';
+import type { Assembly, BigWigData } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from '../../core/utils/assembly';
-import { CommonDataConfig, RemoteFile } from '../utils';
+import { type CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
@@ -86,7 +86,7 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWig
             this.dataPromises.push(this.loadBBI(dataConfig));
         }
 
-        loadBBI(dataConfig: { url: string }) {
+        async loadBBI(dataConfig: { url: string }) {
             if (dataConfig.url) {
                 this.bwFile = new BigWig({
                     filehandle: new RemoteFile(dataConfig.url)

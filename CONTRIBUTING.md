@@ -16,6 +16,51 @@ yarn start
 
 Then, you can open http://localhost:3000/ in a web browser to test the online editor.
 
+## Commit Messages
+
+We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
+
+The allowed pattern of commit messages is:
+
+```sh
+type(scope?): subject  # scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
+```
+
+where `type` can be either `feat`, `fix`, `ci`, `chore`, `docs`, `perf`, `refactor`, or `test`.
+
+Additionally, `scope` should be defined for `feat` and `fix` which should be one of the following: 
+
+- `core`: any general updates to the library, e.g., grammar change, new rendering, etc.
+- `track`: any updates that are specific to tracks in the library, including `gosling-track` and `gosling-axis`.
+- `data-fetcher`: any updates related to data fetchers
+- `editor`: UI and other updates to the online editor
+- `api`: the Gosling APIs
+
+Example commit messages are as follows:
+
+```sh
+git commit -m 'fix(core): correctly position views'
+git commit -m 'feat(editor): add a data preview panel in editor'
+git commit -m 'docs: add details about commitlint in README.md'
+```
+
+To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
+
+## Opening Pull Requests
+We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+
+## Testing Production Build Using Editor
+
+It is sometimes necessary to test the production build of Gosling.js. This frequently happened to us when we needed to ensure that certain data fetchers, like BAM and VCF, work correctly without errors in a deployed app.
+
+To test this, you need to build the project first and then preview the production build.
+
+```sh
+yarn build
+yarn build-editor
+yarn preview
+```
+
 ## Editing `gosling.js/embed`
 
 This repo also contains the source code for `gosling.js/embed`, an ES Module intended to be
@@ -71,27 +116,52 @@ When writing the comments:
 
 (Original post: https://github.com/gosling-lang/gosling.js/pull/714#issuecomment-1146488723)
 
-## Commit Messages
+## Adding Examples to the Editor
 
-We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
+If there is an example you would like to add to the editor example library, please follow the instructions below. 
 
-The allowed pattern of commit messages is:
+1. Add a thumbnail for your example to `editor/example/thumbnails`. We try to keep the width of each thumbnail under 500px, so please resize the image using your favorite image resizing tool. 
 
-```sh
-type(scope?): subject  # scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
+2. Import your thumbnail image to `editor/example/thumbnails.ts` and add it to the `THUMBNAILS` object. 
+
+3. Add your new example specification file to either `editor/example/json-spec` or `editor/example/spec` depending on whether the example is specified in JSON or Javascript. 
+
+4. In `editor/example/index.ts`, import your specification file. Add another object to the `examples` object with the properties `group`, `name`, `spec`, and `image`, where `image` is your thumbnail added to the `THUMBNAILS` object. 
+
+5. Select the example in the editor to make sure your example works as expected. 
+
+## Bumping Gosling.js
+
+GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
+
+```
+yarn version --patch
+git push origin master --tags
 ```
 
-where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
+# Internal Explanations  
+## How does a Gosling spec get turned into a HiGlass spec?
+A Gosling schema goes through the following steps: 
 
-Example commit messages are as follows:
+1. **Preprocessing**: The implicit aspects of the Gosling schema is made explicit here. Default values are added, properties set in parent elements are added to child elements, and IDs for every Gosling track and view are generated if they aren't specified by the user. 
+2. **Track data intermediate representation**: From the preprocessed schema, a Gosling track-based intermediate representation is created. All the information from the schema gets converted into an array of Gosling track data objects, each with track-specific data. What happens to Gosling views? View specifications get applied to each track intermediate representation. 
+3.  **HiGlass schema generation**: By iterating over the Gosling track intermediate representations, a HiGlass schema is generated. Each Gosling track corresponds to a HiGlass view. This HiGlass view will contain one or more HiGlass track, depending on the Gosling track it was derived from. 
 
-```sh
-git commit -m 'fix: correctly position views'
-git commit -m 'feat: add a data preview panel in editor'
-git commit -m 'docs: add details about commitlint in README.md'
+One important nuance to the Gosling schema to HiGlass schema conversion is that there is not a direct correspondence between Gosling tracks and view and HiGlass tracks and views. Instead, each Gosling track corresponds to a HiGlass view. Please examine the relationship between the view and track IDs.  
+
+- **Gosling track ID**: ID that is associated with each track. It is set by the user or is generated during the preprocessing step. 
+- **Gosling view ID**: ID associated with each view. It is set by the user or is generated during the preprocessing step.   
+- **HiGlass track ID**: The HiGlass track ID is the same as the Gosling track ID with `-track` appended to it. 
+- **HiGlass view ID**: Each HiGlass view has an ID, and *this ID is the same as the Gosling track ID.* An instance of GoslingTrackClass knows what the Gosling track ID is by calling `context.viewUid`, which is the HiGlass view ID which is the same as the Gosling track ID. 
+
+The one exception to this are overlaid tracks where the `id` defined at the root level of an overlaid track is used as the HiGlass' view ID. This limits the number of gosling-track instances generated (i.e., multiple tracks that are overlaid can share the same data, hence reducing the number of data requests).
 ```
-
-To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
-
-## Opening Pull Requests
-We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+tracks: [
+   { ..., id: '1' }, // ← This is a track in Gosling. This becomes a HiGlass view '1'
+   { ..., alignment: 'overlay', id: '2', // ← This is actually a view in Gosling, but this becomes a HiGlass view '2'
+      tracks: [ 
+         { ..., id: '3' }, // ← This track is included in a HiGlass view '2'
+         { ..., id: '4' }, // ← This track is included in a HiGlass view '2'
+   ]}
+]
+```
