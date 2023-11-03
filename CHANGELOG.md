@@ -1,3 +1,55 @@
+# [0.12.0](https://github.com/gosling-lang/gosling.js/compare/v0.11.0...v0.12.0) (2023-10-31)
+
+
+### Bug Fixes
+
+* **core:** rename exports from .es.js to .js ([#987](https://github.com/gosling-lang/gosling.js/issues/987)) ([f97269a](https://github.com/gosling-lang/gosling.js/commit/f97269ac48bcef2ebe3e2a7b6f8e4b8208f1d24a))
+
+
+### Features
+
+* **api:** publish traversed spec to gosling api ([#978](https://github.com/gosling-lang/gosling.js/issues/978)) ([f17e69f](https://github.com/gosling-lang/gosling.js/commit/f17e69f8ea9d83e9c574e864b7dfca94a49fa328))
+* **core:** replace `uuid` dependency with `crypto.randomUUID()` ([#976](https://github.com/gosling-lang/gosling.js/issues/976)) ([9b1e89b](https://github.com/gosling-lang/gosling.js/commit/9b1e89b51067abc1b582a99df4a2e94a7f0bb1ac))
+
+
+
+# [0.11.0](https://github.com/gosling-lang/gosling.js/compare/v0.10.4...v0.11.0) (2023-09-27)
+
+
+
+## [0.10.4](https://github.com/gosling-lang/gosling.js/compare/v0.10.3...v0.10.4) (2023-09-27)
+
+
+### Bug Fixes
+
+* **core:** preserve the zoom status only when needed ([#974](https://github.com/gosling-lang/gosling.js/issues/974)) ([b74f10e](https://github.com/gosling-lang/gosling.js/commit/b74f10e98190d2fe89ce8851c33ee8126a5640b9))
+
+
+### Features
+
+* **data-fetcher,core:** Add support for getting data from URLs that require certain request initializations  ([#965](https://github.com/gosling-lang/gosling.js/issues/965)) ([6ddb4b6](https://github.com/gosling-lang/gosling.js/commit/6ddb4b6459066d13e33aa21cf25f3661fc27068b))
+
+
+
+## [0.10.3](https://github.com/gosling-lang/gosling.js/compare/v0.10.2...v0.10.3) (2023-09-25)
+
+
+### Bug Fixes
+
+* **core:** first track ID should not be lost after compile ([#972](https://github.com/gosling-lang/gosling.js/issues/972)) ([f73410d](https://github.com/gosling-lang/gosling.js/commit/f73410d7a16435fd99cc14ef3e9c1eaf15de61d0))
+
+
+
+## [0.10.2](https://github.com/gosling-lang/gosling.js/compare/v0.10.1...v0.10.2) (2023-09-22)
+
+
+### Bug Fixes
+
+* **core:** preserve zoom status when new track added ([#971](https://github.com/gosling-lang/gosling.js/issues/971)) ([875a9b5](https://github.com/gosling-lang/gosling.js/commit/875a9b54911fb259b795eab7afad853d1ef3e3b7))
+* **core:** rule mark calculation in circular layout ([#967](https://github.com/gosling-lang/gosling.js/issues/967)) ([09a5207](https://github.com/gosling-lang/gosling.js/commit/09a5207fb58c877484911b7158724deec6304f67))
+
+
+
 ## [0.10.1](https://github.com/gosling-lang/gosling.js/compare/v0.10.0...v0.10.1) (2023-08-02)
 
 

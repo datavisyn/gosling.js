@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import type {
     SingleTrack,
     GoslingSpec,
@@ -31,6 +30,7 @@ import {
 } from './defaults';
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
+import { uuid } from '../core/utils/uuid';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -96,7 +96,7 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
 export function convertToFlatTracks(spec: SingleView): Track[] {
     if (IsFlatTracks(spec)) {
         // This is already `FlatTracks`, so just override the view definition
-        const base = {...spec, tracks: undefined, id: undefined };
+        const base = { ...spec, tracks: undefined, id: undefined };
         return spec.tracks
             .filter(track => !track._invalidTrack)
             .map(track => Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
@@ -111,13 +111,13 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     // This is OverlaidTracks
                     newTracks.push({
                         ...track,
-                        overlay: [...track.tracks],
+                        _overlay: [...track.tracks],
                         tracks: undefined,
                         alignment: undefined
                     } as Track);
                 } else {
                     // Override track definitions from views
-                    const base = {...spec, tracks: undefined, id: undefined };
+                    const base = { ...spec, tracks: undefined, id: undefined };
                     const newSpec = Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
                     newTracks.push(newSpec);
                 }
@@ -125,7 +125,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
     } else {
         newTracks.push({
             ...spec,
-            overlay: [...spec.tracks.filter(track => !track._invalidTrack)],
+            _overlay: [...spec.tracks.filter(track => !track._invalidTrack)],
             tracks: undefined,
             alignment: undefined
         } as Track);
@@ -176,7 +176,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
     // ID should be assigned to each view and track for an API usage
     if (!spec.id) {
-        spec.id = uuid.v4();
+        spec.id = uuid();
     }
 
     if ('tracks' in spec) {
@@ -188,11 +188,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
          */
         tracks = spreadTracksByData(tracks);
 
-        const linkID = uuid.v4();
+        const linkID = uuid();
         tracks.forEach((track, i, array) => {
             // ID should be assigned to each view and track for an API usage
             if (!track.id) {
-                track.id = uuid.v4();
+                track.id = uuid();
             }
 
             // If size not defined, set default ones
@@ -215,7 +215,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     track.xe.field
                     // Question: Should we consider mark types? (e.g., link might not be supported?)
                 ) {
-                    const newField = uuid.v4();
+                    const newField = uuid();
                     const startField = track.x.field;
                     const endField = track.xe.field;
                     const padding = track.displacement.padding;
@@ -263,10 +263,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             track.style = getStyleOverridden(spec.style, track.style);
             if (IsOverlaidTrack(track)) {
                 // Remove the dummy tracks from an overlay track
-                track.overlay = track.overlay.filter(overlayTrack => {
+                track._overlay = track._overlay.filter(overlayTrack => {
                     return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
                 });
-                track.overlay.forEach(o => {
+                track._overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
                 });
             }
@@ -291,7 +291,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.y) && !track.y.domain) {
                     track.y.domain = spec.yDomain;
                 } else if (IsOverlaidTrack(track)) {
-                    track.overlay.forEach(o => {
+                    track._overlay.forEach(o => {
                         if (IsChannelDeep(o.y) && !o.y.domain) {
                             o.y.domain = spec.yDomain;
                         }
@@ -305,7 +305,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.domain) {
                 track.x.domain = spec.xDomain;
             } else if (IsOverlaidTrack(track)) {
-                track.overlay.forEach(o => {
+                track._overlay.forEach(o => {
                     if (IsChannelDeep(o.x) && !o.x.domain) {
                         o.x.domain = spec.xDomain;
                     }
@@ -319,7 +319,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.x.linkingId = spec.linkingId ?? linkID;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
-                track.overlay.forEach(o => {
+                track._overlay.forEach(o => {
                     if (isAdded) return; // We want to add only once
 
                     if (IsChannelDeep(o.x) && !o.x.linkingId) {
@@ -353,7 +353,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     }
                 } else if (IsOverlaidTrack(track)) {
                     // let isNone = false; // If there is at least one 'none' axis, should not render axis.
-                    track.overlay.forEach(o => {
+                    track._overlay.forEach(o => {
                         if (IsChannelDeep(o.x) && !o.x.axis) {
                             if (track.orientation === 'vertical') {
                                 o.x.axis = 'left';
@@ -392,7 +392,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 }
             } else if (IsOverlaidTrack(track)) {
                 // let isNone = false; // If there is at least one 'none' axis, should not render axis.
-                track.overlay.forEach(o => {
+                track._overlay.forEach(o => {
                     if (IsChannelDeep(o.x) && o.x.axis && o.x.axis !== 'none') {
                         if (track.orientation === 'vertical') {
                             if (o.x.axis === 'top') {
@@ -433,7 +433,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     if (track.mark === 'withinLink' && track.flipY === undefined) {
                         track.flipY = true;
                     }
-                    track.overlay.forEach(o => {
+                    track._overlay.forEach(o => {
                         if (o.mark === 'withinLink' && o.flipY === undefined) {
                             o.flipY = true;
                         }

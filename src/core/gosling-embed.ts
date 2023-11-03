@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
 import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 import { compile } from '../compiler/compile';
+import type { UrlToFetchOptions } from './gosling-component';
 import { getTheme, type Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
 import { type GoslingApi, createApi } from '../api/api';
@@ -20,6 +21,7 @@ export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 
     id?: string;
     className?: string;
     theme?: Theme;
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 const MAX_TRIES = 20;
@@ -41,7 +43,8 @@ const launchHiglass = (
         className: opts.className,
         options: opts
     });
-    ReactDOM.render(component, element);
+
+    createRoot(element).render(component);
 
     // For some reason our wrapper component fails to initialize the provided `ref`
     // immediately like `hglib.launch()`. This is a work-around to poll `ref`
@@ -92,7 +95,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
             },
             [...GoslingTemplates],
             theme,
-            {} // TODO: properly specify this
+            {}, // TODO: properly specify this
+            opts.urlToFetchOptions
         );
     });
 }

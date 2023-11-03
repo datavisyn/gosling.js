@@ -4,9 +4,11 @@ import { traverseToFixSpecDownstream, overrideDataTemplates } from './spec-prepr
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
+import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
+import { publish } from '../api/pubsub';
 
 /** The callback function called everytime after the spec has been compiled */
 export type CompileCallback = (
@@ -25,7 +27,8 @@ export function compile(
     containerStatus: {
         containerSize?: { width: number; height: number };
         containerParentSize?: { width: number; height: number };
-    }
+    },
+    urlToFetchOptions?: UrlToFetchOptions
 ) {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
@@ -67,6 +70,13 @@ export function compile(
         trackInfos = getRelativeTrackInfo(specCopy, theme).trackInfos;
     }
 
+    // publish the fixed spec
+    // used for alt-gosling
+    publish('specProcessed', {
+        id: specCopy.id,
+        spec: specCopy
+    });
+
     // Make HiGlass models for individual tracks
-    createHiGlassModels(specCopy, trackInfos, callback, theme);
+    createHiGlassModels(specCopy, trackInfos, callback, theme, urlToFetchOptions);
 }

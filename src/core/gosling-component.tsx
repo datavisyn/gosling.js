@@ -1,22 +1,28 @@
 /* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import type { TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
+import type { RequestInit } from '@gosling-lang/higlass-schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
-import ResizeSensor from 'css-element-queries/src/ResizeSensor';
+import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, type Theme } from './utils/theme';
 import { createApi, type GoslingApi } from '../api/api';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
-import * as uuid from 'uuid';
 import { publish } from '../api/pubsub';
 import type { IdTable } from '../api/track-and-view-ids';
+import { preverseZoomStatus } from './utils/higlass-zoom-config';
+import { uuid } from '../core/utils/uuid';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
 const DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER = 300;
 
+/** Matches URLs to specific fetch options so that datafetchers have access URL specific fetch options */
+export interface UrlToFetchOptions {
+    [url: string]: RequestInit;
+}
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
@@ -27,6 +33,7 @@ interface GoslingCompProps {
     className?: string;
     theme?: Theme;
     templates?: TemplateTrackDef[];
+    urlToFetchOptions?: UrlToFetchOptions;
     experimental?: {
         reactive?: boolean;
     };
@@ -52,7 +59,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const hgRef = useRef<HiGlassApi>(null);
 
     const theme = getTheme(props.theme || 'light');
-    const wrapperDivId = props.id ?? uuid.v4();
+    const wrapperDivId = props.id ?? uuid();
 
     /**
      * Publishes event if there is a new view added
@@ -115,6 +122,10 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     if (props.experimental?.reactive && isMountedOnce) {
                         // Use API to update visualization.
                         setTimeout(() => {
+                            preverseZoomStatus(
+                                newHiGlassSpec,
+                                hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec
+                            );
                             hgRef.current?.api.setViewConfig(newHiGlassSpec);
                         }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
                     } else {
@@ -131,13 +142,16 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 {
                     containerSize: wrapperSize.current,
                     containerParentSize: wrapperParentSize.current
-                }
+                },
+                props.urlToFetchOptions
             );
         }
     }, [props.spec, theme]);
 
     // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
     useEffect(() => {
+        if (!props.spec?.responsiveSize) return;
+
         const containerElement = document.getElementById(wrapperDivId);
         if (!containerElement) return;
 
