@@ -9,7 +9,7 @@
     },
     "homepage": "https://gosling-lang.github.io/gosling.js/",
     "main": "dist/gosling.js",
-    "module": "dist/gosling.es.js",
+    "module": "dist/gosling.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist"
@@ -18,10 +18,9 @@
     "exports": {
         ".": {
           "types": "./dist/index.d.ts",
-          "import": "./dist/gosling.es.js",
-          "default": "./dist/gosling.es.js"
-        },
-        "./embed": "./dist/embed/index.js"
+          "import": "./dist/gosling.js",
+          "default": "./dist/gosling.js"
+        }
     },
     "scripts": {
         "start": "vite --mode editor",
