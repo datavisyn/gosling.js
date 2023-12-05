@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
 import react from '@vitejs/plugin-react';
 import * as esbuild from 'esbuild';
 import path, { dirname } from 'path';
@@ -69,6 +68,7 @@ const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
     '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
+    '@gosling-lang/gosling-theme': path.resolve(__dirname, './src/gosling-theme/index.ts'),
     '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
     '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
     '@gosling-lang/gosling-brush': path.resolve(__dirname, './src/tracks/gosling-brush/index.ts'),
@@ -91,14 +91,16 @@ const esm = defineConfig({
         target: 'es2018',
         sourcemap: true,
         lib: {
-            entry: path.resolve(__dirname, 'src/index.ts'),
+            entry: {
+                gosling: path.resolve(__dirname, 'src/index.ts'),
+                utils: path.resolve(__dirname, 'src/exported-utils.ts'),
+            },
             formats: ['es'],
-            fileName: 'gosling'
         },
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker, dts({ rollupTypes: true })]
+    plugins: [manualInlineWorker]
 });
 
 const dev = defineConfig({
@@ -114,6 +116,7 @@ const dev = defineConfig({
 const testing = defineConfig({
     resolve: { alias },
     test: {
+        exclude: ['./node_modules/**', './dist/**', './e2e/**'],
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',

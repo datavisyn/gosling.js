@@ -99,7 +99,6 @@ export class GoslingTrackModel {
         // generate scales based on domains and ranges
         this.generateScales();
 
-        // EXPERIMENTAL: aggregate data when `aggregate` option is used
         this.dataAggregated = aggregateData(this.spec(), this.dataAggregated);
 
         // Add default specs.
