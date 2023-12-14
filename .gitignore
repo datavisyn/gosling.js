@@ -1,7 +1,8 @@
 /node_modules
 /coverage
 /build
-/dist
+# Enable to allow install from git
+# /dist
 /.pnp
 /lib
 /bin
