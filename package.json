@@ -44,7 +44,7 @@
         "deploy": "gh-pages -d build",
         "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
         "prepare": "echo 'dummy prepare since prepack has no dev dependencies'",
-        "prepack": "npm run build",
+        "prepack": "pnpm run build",
         "knip": "knip --config knip.config.json",
         "e2e": "playwright test",
         "preinstall": "npx only-allow pnpm"
