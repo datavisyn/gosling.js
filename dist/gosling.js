@@ -33834,7 +33834,7 @@ const config$1 = {
   }
 };
 const factory$1 = (HGC, context, options) => {
-  var _assembly2, _processedTileInfo, _mouseDownX, _mouseDownY, _isRangeBrushActivated, _gBrush, _loadingTextStyleObj, _loadingTextBg, _loadingText, _tilesToId, tilesToId_fn, _binsPerTile, binsPerTile_get, _generateTabularData, generateTabularData_fn, _onMouseDown, onMouseDown_fn, _onMouseMove, onMouseMove_fn, _onMouseUp, onMouseUp_fn, _onMouseOut, onMouseOut_fn, _getElementsWithinMouse, getElementsWithinMouse_fn, _publishTrackEvents, publishTrackEvents_fn, _onRangeBrush, onRangeBrush_fn, _highlightMarks, highlightMarks_fn, _publishOnNewTrack, publishOnNewTrack_fn;
+  var _assembly2, _processedTileInfo, _mouseDownX, _mouseDownY, _isRangeBrushActivated, _gBrush, _loadingTextStyleObj, _loadingTextBg, _loadingText, _getYScaleAndOffset, getYScaleAndOffset_fn, _tilesToId, tilesToId_fn, _binsPerTile, binsPerTile_get, _generateTabularData, generateTabularData_fn, _onMouseDown, onMouseDown_fn, _onMouseMove, onMouseMove_fn, _onMouseUp, onMouseUp_fn, _onMouseOut, onMouseOut_fn, _getElementsWithinMouse, getElementsWithinMouse_fn, _publishTrackEvents, publishTrackEvents_fn, _onRangeBrush, onRangeBrush_fn, _highlightMarks, highlightMarks_fn, _publishOnNewTrack, publishOnNewTrack_fn;
   const { tileProxy } = HGC.services;
   const { BarTrack } = HGC.tracks;
   const loadingTextStyle = getTextStyle({ color: "black", size: 12 });
@@ -33847,6 +33847,12 @@ const factory$1 = (HGC, context, options) => {
     constructor() {
       var _a, _b, _c, _d, _e, _f;
       super(context, options);
+      /**
+       * Calulates how much the tile has been scaled, and how much to offset the tile.
+       * @param drawnAtScale The scale at which the tile has been drawn
+       * @returns [scale, offset]
+       */
+      __privateAdd(this, _getYScaleAndOffset);
       __privateAdd(this, _binsPerTile);
       /**
        * Construct tabular data from a higlass tileset and a gosling track model.
@@ -34023,29 +34029,38 @@ const factory$1 = (HGC, context, options) => {
      */
     drawTile(tile) {
       var _a, _b;
-      tile.drawnAtScale = this._xScale.copy();
+      if (!tile.drawnAtScale) {
+        tile.drawnAtScale = this._xScale.copy();
+      }
       const tileInfo = __privateGet(this, _processedTileInfo)[tile.tileId];
       if (!tileInfo) {
         return;
       }
-      (_a = tile.graphics) == null ? void 0 : _a.clear();
-      (_b = tile.graphics) == null ? void 0 : _b.removeChildren();
-      this.pBackground.clear();
-      this.pBackground.removeChildren();
-      this.pBorder.clear();
-      this.pBorder.removeChildren();
-      this.displayedLegends = [];
-      tileInfo.goslingModels.forEach((model) => {
-        const trackWidth = this.dimensions[0];
-        const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-        if (!model.trackVisibility({ zoomLevel })) {
-          return;
-        }
-        drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
-        drawMark(HGC, this, tile, model);
-        drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
-      });
-      this.forceDraw();
+      const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
+      if (graphicsXScale != 1 && graphicsXScale < 2 && graphicsXScale > 0.5) {
+        tile.graphics.scale.x = graphicsXScale;
+        tile.graphics.position.x = graphicsXPos;
+      } else {
+        tile.drawnAtScale = this._xScale.copy();
+        (_a = tile.graphics) == null ? void 0 : _a.clear();
+        (_b = tile.graphics) == null ? void 0 : _b.removeChildren();
+        this.pBackground.clear();
+        this.pBackground.removeChildren();
+        this.pBorder.clear();
+        this.pBorder.removeChildren();
+        this.displayedLegends = [];
+        tileInfo.goslingModels.forEach((model) => {
+          const trackWidth = this.dimensions[0];
+          const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+          if (!model.trackVisibility({ zoomLevel })) {
+            return;
+          }
+          drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
+          drawMark(HGC, this, tile, model);
+          drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
+        });
+        this.forceDraw();
+      }
     }
     /**
      * Render this track again using a new option when a user changed the option. Overrides rerender in BarTrack.
@@ -34447,7 +34462,7 @@ const factory$1 = (HGC, context, options) => {
             PubSub.publish("data-preview", {
               id: context.viewUid,
               // TODO: Do we need the stringified version? Stringify of large JSON data is very slow.
-              dataConfig: JSON.stringify({ data: resolvedSpec.data }),
+              dataConfig: { data: resolvedSpec.data },
               data: NUM_OF_ROWS_IN_PREVIEW > numOrRows ? tabularDataTransformed : sampleSize(tabularDataTransformed, NUM_OF_ROWS_IN_PREVIEW)
               // ...
             });
@@ -34627,6 +34642,15 @@ const factory$1 = (HGC, context, options) => {
   _loadingTextStyleObj = new WeakMap();
   _loadingTextBg = new WeakMap();
   _loadingText = new WeakMap();
+  _getYScaleAndOffset = new WeakSet();
+  getYScaleAndOffset_fn = function(drawnAtScale) {
+    const dA = drawnAtScale.domain();
+    const dB = this._yScale.domain();
+    const tileK = (dA[1] - dA[0]) / (dB[1] - dB[0]);
+    const newRange = this._yScale.domain().map(drawnAtScale);
+    const posOffset = newRange[0];
+    return [tileK, -posOffset * tileK];
+  };
   _tilesToId = new WeakSet();
   tilesToId_fn = function(xTiles, yTiles, zoomLevel) {
     if (!yTiles) {
