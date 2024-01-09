@@ -1,0 +1,16 @@
+export declare const test: {
+    base: string;
+    root: {
+        background: string;
+    };
+    axis: {
+        baselineColor: string;
+        tickColor: string;
+        labelColor: string;
+        gridColor: string;
+    };
+    point: {
+        size: number;
+    };
+};
+//# sourceMappingURL=test.d.ts.map
