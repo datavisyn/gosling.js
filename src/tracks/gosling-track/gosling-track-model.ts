@@ -794,11 +794,19 @@ export class GoslingTrackModel {
                             break;
                         case 'color':
                         case 'stroke':
-                            let interpolate = interpolateViridis;
-                            if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
-                                interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                            if (Array.isArray(range) && range.every(d => typeof d === 'string')) {
+                                // Support for custom color palettes, i.e. ["green", "red", "blue"]
+                                this.channelScales[channelKey] = scaleLinear(range as string[]).domain(
+                                    scaleLinear(domain as [number, number]).ticks(range.length)
+                                );
+                                break;
                             }
-                            this.channelScales[channelKey] = scaleSequential(interpolate).domain(
+                            let interpolated = interpolateViridis;
+                            
+                            if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
+                                interpolated = PREDEFINED_COLOR_STR_MAP[range as string];
+                            }
+                            this.channelScales[channelKey] = scaleSequential(interpolated).domain(
                                 domain as [number, number]
                             );
                             break;
