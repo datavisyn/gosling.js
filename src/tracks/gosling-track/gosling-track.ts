@@ -1048,7 +1048,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // Determine whether to activate a range brush
             const mouseEvents = this.options.spec.experimental?.mouseEvents;
             const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
-            this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
+            this.#isRangeBrushActivated =
+                rangeSelectEnabled &&
+                (isAltPressed || (IsMouseEventsDeep(mouseEvents) && mouseEvents.rangeSelect === 'always'));
 
             this.pMouseHover.clear();
         }

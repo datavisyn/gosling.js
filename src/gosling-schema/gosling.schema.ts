@@ -396,7 +396,7 @@ export type MouseEventsDeep = {
     click?: boolean;
 
     /** Whether to send range selection events. */
-    rangeSelect?: boolean;
+    rangeSelect?: boolean | 'always';
 
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
