@@ -648,7 +648,9 @@ export interface Style {
     /**
      * Customize visual effects of `rangeSelect` events on marks .
      */
-    select?: EventStyle;
+    select?: EventStyle & {
+        enabled?: boolean;
+    };
 
     /**
      * Customize the style of the brush mark in the `rangeSelect` mouse event.

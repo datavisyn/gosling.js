@@ -1222,7 +1222,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 });
             }
 
-            if (capturedElements.length !== 0) {
+            if (capturedElements.length !== 0 && this.options.spec.style?.select?.enabled !== false) {
                 // selection effect graphics
                 const g = this.pMouseSelection;
 
