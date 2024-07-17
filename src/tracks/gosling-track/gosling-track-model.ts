@@ -79,7 +79,7 @@ export class GoslingTrackModel {
         this.dataAggregated = data;
 
         this.specOriginal = spec;
-        this.specComplete = spec;
+        this.specComplete = JSON.parse(JSON.stringify(spec));
 
         this.channelScales = {};
 

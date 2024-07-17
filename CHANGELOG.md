@@ -1,3 +1,47 @@
+# [0.17.0](https://github.com/gosling-lang/gosling.js/compare/v0.16.0...v0.17.0) (2024-05-06)
+
+
+### Features
+
+* **api:** use gosling server instead of HiGlass server for gene search ([#1053](https://github.com/gosling-lang/gosling.js/issues/1053)) ([f0ec117](https://github.com/gosling-lang/gosling.js/commit/f0ec117ad857ca89b7b1bc17ee555af8e0e8acda))
+
+
+### Performance Improvements
+
+* **track:** reduce webgl memory usage ([#1057](https://github.com/gosling-lang/gosling.js/issues/1057)) ([80ed16e](https://github.com/gosling-lang/gosling.js/commit/80ed16ec022286efb97d54307623ef02f565a7aa))
+
+
+
+# [0.16.0](https://github.com/gosling-lang/gosling.js/compare/v0.15.0...v0.16.0) (2024-02-22)
+
+
+### Bug Fixes
+
+* **core:** Flipped y-axis stacked bar chart ([#1042](https://github.com/gosling-lang/gosling.js/issues/1042)) ([6f13ae7](https://github.com/gosling-lang/gosling.js/commit/6f13ae7d65253d40dd1b2ddd6aece8def52e3fc5))
+
+
+### Performance Improvements
+
+* **track:** Persist GoslingTrackModels ([#1044](https://github.com/gosling-lang/gosling.js/issues/1044)) ([560d121](https://github.com/gosling-lang/gosling.js/commit/560d1210fe9d8f4d7326a9c0dc4a75b5b9254614))
+
+
+
+# [0.15.0](https://github.com/gosling-lang/gosling.js/compare/v0.14.0...v0.15.0) (2024-01-19)
+
+
+### Bug Fixes
+
+* **core:** do not print unknown data type warnings in console ([#1034](https://github.com/gosling-lang/gosling.js/issues/1034)) ([dc0386d](https://github.com/gosling-lang/gosling.js/commit/dc0386d812a30ebd666ce07a2d7edec868c74fb9))
+* **core:** publish events on first render ([#1024](https://github.com/gosling-lang/gosling.js/issues/1024)) ([bf470c1](https://github.com/gosling-lang/gosling.js/commit/bf470c15950bc468024748eea6aac6fb72dcf565))
+* **track:** prevent circular layout legend from being obscured ([#1029](https://github.com/gosling-lang/gosling.js/issues/1029)) ([e1649af](https://github.com/gosling-lang/gosling.js/commit/e1649af96cc9ffa81968f4fb4e5fee814bb7612c))
+
+
+### Features
+
+* **core:** export GoslingCompProps ([#1033](https://github.com/gosling-lang/gosling.js/issues/1033)) ([e4091ae](https://github.com/gosling-lang/gosling.js/commit/e4091ae3812227e421ed0160ea7adefcdf324c8a))
+
+
+
 # [0.14.0](https://github.com/gosling-lang/gosling.js/compare/v0.13.2...v0.14.0) (2024-01-08)
 
 
