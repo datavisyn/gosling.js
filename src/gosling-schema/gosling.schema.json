@@ -3469,6 +3469,14 @@
           "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
           "type": "number"
         },
+        "sampleType": {
+          "description": "Specify the way of sampling from the data if the number of rows to show exceeds `sampleLength`.\n\n__Default:__ `random`",
+          "enum": [
+            "first",
+            "random"
+          ],
+          "type": "string"
+        },
         "type": {
           "const": "json",
           "description": "Define data type.",

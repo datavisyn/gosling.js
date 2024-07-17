@@ -154,7 +154,11 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
             // sample the data to make it managable for visualization components
             const sizeLimit = this.dataConfig.sampleLength ?? 1000;
             if (sizeLimit < tabularData.length) {
-                tabularData = sampleSize(tabularData, sizeLimit);
+                // TODO: allow to provide sampling method which incorporates order of JSON array (similar to tabularData.slice(0, sizeLimit))
+                tabularData =
+                    this.dataConfig.sampleType === 'first'
+                        ? tabularData.slice(0, sizeLimit)
+                        : sampleSize(tabularData, sizeLimit);
             }
 
             return {

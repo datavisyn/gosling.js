@@ -76,7 +76,7 @@ export class GoslingTrackModel {
 
         this.theme = theme ?? getTheme();
 
-        this.dataAggregated = data; // this will be updated after validity of the spec is checked
+        this.dataAggregated = data;
 
         this.specOriginal = spec;
         this.specComplete = JSON.parse(JSON.stringify(spec));
@@ -797,6 +797,13 @@ export class GoslingTrackModel {
                             let interpolate = interpolateViridis;
                             if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
                                 interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                            } else if (Array.isArray(range) && range.every(d => typeof d === 'string')) {
+                                // Support for custom color palettes, i.e. ["green", "red", "blue"]
+                                const scaler = scaleLinear(range as string[]).domain(
+                                    // Map the range to [0, 0.5, 1] in the above example
+                                    range.map((_, i, arr) => i / (arr.length - 1))
+                                );
+                                interpolate = (t: number) => scaler(t);
                             }
                             this.channelScales[channelKey] = scaleSequential(interpolate).domain(
                                 domain as [number, number]

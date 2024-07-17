@@ -939,8 +939,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          */
         getResolvedTracks(forceUpdate = false) {
             if (forceUpdate || !this.resolvedTracks) {
-                const copy = structuredClone(this.options.spec);
-                const tracks = resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+                const tracks = resolveSuperposedTracks(this.options.spec).filter(t => t.mark !== 'brush');
                 // We will never need to access the values field in the data spec. It can be quite large which can degrade performance so we remove it.
                 tracks.forEach(track => {
                     if ('values' in track.data) {
@@ -1071,6 +1070,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         const numOrRows = tabularDataTransformed.length;
                         PubSub.publish('data-preview', {
                             id: context.viewUid,
+                            // TODO: Do we need the stringified version? Stringify of large JSON data is very slow.
                             dataConfig: JSON.stringify({ data: resolvedSpec.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
@@ -1128,7 +1128,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // Determine whether to activate a range brush
             const mouseEvents = this.options.spec.mouseEvents;
             const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
-            this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
+            this.#isRangeBrushActivated =
+                rangeSelectEnabled &&
+                (isAltPressed || (IsMouseEventsDeep(mouseEvents) && mouseEvents.rangeSelect === 'always'));
 
             this.pMouseHover.clear();
         }
@@ -1256,14 +1258,14 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 ) {
                     publish(eventType, {
                         id: context.viewUid,
-                        spec: structuredClone(this.options.spec),
+                        spec: this.options.spec,
                         shape: { x, y, width, height, cx, cy, innerRadius, outerRadius, startAngle, endAngle }
                     });
                 }
             } else {
                 publish(eventType, {
                     id: context.viewUid,
-                    spec: structuredClone(this.options.spec),
+                    spec: this.options.spec,
                     shape: { x, y, width, height }
                 });
             }
@@ -1300,7 +1302,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 });
             }
 
-            if (capturedElements.length !== 0) {
+            if (capturedElements.length !== 0 && this.options.spec.style?.select?.enabled !== false) {
                 // selection effect graphics
                 const g = this.pMouseSelection;
 

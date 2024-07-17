@@ -381,7 +381,7 @@ export type MouseEventsDeep = {
     click?: boolean;
 
     /** Whether to send range selection events. */
-    rangeSelect?: boolean;
+    rangeSelect?: boolean | 'always';
 
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
@@ -632,7 +632,9 @@ export interface Style {
     /**
      * Customize visual effects of `rangeSelect` events on marks .
      */
-    select?: EventStyle;
+    select?: EventStyle & {
+        enabled?: boolean;
+    };
 
     /**
      * Customize the style of the brush mark in the `rangeSelect` mouse event.
@@ -933,6 +935,13 @@ export interface JsonData {
      * __Default:__ `1000`
      */
     sampleLength?: number;
+
+    /**
+     * Specify the way of sampling from the data if the number of rows to show exceeds `sampleLength`.
+     *
+     * __Default:__ `random`
+     */
+    sampleType?: 'first' | 'random';
 
     /** experimental */
     genomicFieldsToConvert?: {

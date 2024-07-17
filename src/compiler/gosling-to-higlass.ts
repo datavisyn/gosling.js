@@ -142,7 +142,9 @@ export function goslingToHiGlass(
                 firstResolvedSpec.data.type === 'bam' ||
                 firstResolvedSpec.data.type === 'vcf' ||
                 firstResolvedSpec.data.type === 'gff' ||
-                firstResolvedSpec.data.type === 'bed')
+                firstResolvedSpec.data.type === 'bed' ||
+                // TODO: This is a hack to enable custom data fetchers
+                (firstResolvedSpec.data as any).useCustomDataFetcher)
         ) {
             const getFieldName = (c: 'x' | 'xe' | 'x1' | 'x1e') => {
                 const cDef = firstResolvedSpec[c];

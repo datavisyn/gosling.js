@@ -34,12 +34,13 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return [{ ...track, superpose: undefined } as SingleTrack];
     }
 
-    const base: SingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as Partial<OverlaidTrack>)._overlay; // remove `superpose` from the base spec
+    // TODO: Is this sufficient? If yes, also apply to other functions doing this.
+    const { _overlay, ...base } = track as Partial<OverlaidTrack>;
+    // delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
     track._overlay.forEach((subSpec, i) => {
-        const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+        const spec = Object.assign({}, base, subSpec) as SingleTrack;
         if (spec.title && i !== 0) {
             delete spec.title;
         }
